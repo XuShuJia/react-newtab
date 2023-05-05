@@ -1,0 +1,94 @@
+:root {
+  .button {
+    --defaultColor: #333333;
+    --defaultBackground: #f2f2f2;
+    --defaultActiveBackground: #dddddd;
+    --primaryColor: #ffffff;
+    --primaryBackground: #0191ff;
+    --primaryActiveBackground: #0081e4;
+    --dangerColor: #ffffff;
+    --dangerBackground: #f00f00;
+    --dangerActiveBackground: #d60e00;
+  }
+  &[data-theme="dark"] {
+    .button {
+      --defaultColor: #ffffff;
+      --defaultBackground: #333333;
+      --defaultActiveBackground: #1d1c1c;
+      --primaryColor: #ffffff;
+      --primaryBackground: #0066b4;
+      --primaryActiveBackground: #004299;
+      --dangerColor: #ffffff;
+      --dangerBackground: #b10c00;
+      --dangerActiveBackground: #9d0a00;
+    }
+  }
+}
+
+.button {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  white-space: nowrap;
+  width: min-content;
+  cursor: pointer;
+  &[data-icon="true"] {
+    & > svg {
+      margin-right: 4px;
+    }
+  }
+  &[data-size="small"] {
+    padding: 5px 10px;
+    font-size: 12px;
+    border-radius: 3px;
+  }
+  &[data-size="default"] {
+    padding: 9px 12px;
+    font-size: 14px;
+    border-radius: 5px;
+  }
+  &[data-size="large"] {
+    padding: 11px 15px;
+    font-size: 16px;
+    border-radius: 7px;
+  }
+  &[data-type="default"] {
+    color: var(--defaultColor);
+    background: var(--defaultBackground);
+    &:active {
+      background: var(--defaultActiveBackground);
+    }
+  }
+  &[data-type="primary"] {
+    color: var(--primaryColor);
+    background: var(--primaryBackground);
+    &:active {
+      background: var(--primaryActiveBackground);
+    }
+  }
+  &[data-type="danger"] {
+    color: var(--dangerColor);
+    background: var(--dangerBackground);
+    &:active {
+      background: var(--dangerActiveBackground);
+    }
+  }
+  &[data-type="link"] {
+    color: var(--linkColor);
+  }
+}
+
+.button-group {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  .button {
+    margin-right: 10px;
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
