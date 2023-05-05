@@ -1,0 +1,32 @@
+:root {
+  .search-bar {
+    --borderColor: #dddddd;
+    --focusBorderColor: #0191ff;
+    --background: #ffffff;
+  }
+  &[data-theme="dark"] {
+    .search-bar {
+      --borderColor: #4b4b4b;
+      --background: #252525;
+    }
+  }
+}
+.search-bar {
+  & > input {
+    @size: 40px;
+    box-sizing: border-box;
+    display: block;
+    width: 450px;
+    height: @size;
+    padding: 0 20px;
+    border: 1px solid var(--borderColor);
+    border-radius: @size;
+    font-size: 14px;
+    text-align: center;
+    background: var(--background);
+    outline: none;
+    &:focus {
+      border-color: var(--focusBorderColor);
+    }
+  }
+}
