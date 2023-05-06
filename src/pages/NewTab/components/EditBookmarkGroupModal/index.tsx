@@ -1,4 +1,3 @@
-import React from "react";
 import { useImmer } from "use-immer";
 import { CreateCommandModal } from "~/components/Modal";
 import FormItem from "~/components/FormItem";

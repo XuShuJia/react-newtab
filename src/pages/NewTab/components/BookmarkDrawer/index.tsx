@@ -1,4 +1,4 @@
-import React, { FC, PropsWithChildren, memo, useEffect, useRef } from "react";
+import { FC, PropsWithChildren, memo, useEffect, useRef } from "react";
 import { useImmer } from "use-immer";
 import { FiPlus, FiFolder, FiChevronRight } from "react-icons/fi";
 import styles from "./style.module.less";

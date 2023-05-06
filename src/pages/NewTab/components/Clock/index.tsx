@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef } from "react";
+import { FC, useEffect, useRef } from "react";
 import { useImmer } from "use-immer";
 import styles from "./style.module.less";
 

@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useLayoutEffect } from "react";
+import { FC, useCallback, useLayoutEffect } from "react";
 import { useImmer } from "use-immer";
 import { FiBookmark, FiMoon, FiSun } from "react-icons/fi";
 import styles from "./style.module.less";

@@ -1,4 +1,3 @@
-import React from "react";
 import { nanoid } from "nanoid";
 import { CreateCommandModal } from "~/components/Modal";
 import FormItem from "~/components/FormItem";

@@ -1,4 +1,3 @@
-import React from "react";
 import styles from "./style.module.less";
 import { CreateCommandModal } from "./index";
 import { IConfirmModalProps } from "./types";

@@ -38,7 +38,7 @@ export default () => {
       const files = fileInput.files;
       if (files) {
         const fileReader = new FileReader();
-        fileReader.addEventListener("load", (e) => {
+        fileReader.addEventListener("load", () => {
           if (fileReader.result && typeof fileReader.result === "string") {
             const bookmarkGroupList = JSON.parse(
               fileReader.result

@@ -1,4 +1,3 @@
-import React from "react";
 import { CreateCommandModal } from "~/components/Modal";
 import FormItem from "~/components/FormItem";
 import { IEditBookmarkItemModalProps } from "./types";

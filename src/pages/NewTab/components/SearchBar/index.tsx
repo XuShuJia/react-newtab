@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef } from "react";
+import { FC, useEffect, useRef } from "react";
 import styles from "./style.module.less";
 
 const SearchBar: FC = () => {

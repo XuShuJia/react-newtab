@@ -1,4 +1,3 @@
-import React from "react";
 import { nanoid } from "nanoid";
 import { useImmer } from "use-immer";
 import { CreateCommandModal } from "~/components/Modal";
