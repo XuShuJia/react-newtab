@@ -1,26 +1,41 @@
-import React, { FC, useCallback } from "react";
+import React, { FC, useCallback, useEffect, useLayoutEffect } from "react";
 import { useImmer } from "use-immer";
 import { FiBookmark, FiMoon, FiSun } from "react-icons/fi";
 import styles from "./style.module.less";
-import { NSBookmark } from "./types";
+import { IState, TThemeMode } from "./types";
 import Button, { ButtonGroup } from "~/components/Button";
-import Modal from "~/components/Modal";
 import Clock from "./components/Clock";
 import SearchBar from "./components/SearchBar";
 import BookmarkDrawer from "./components/BookmarkDrawer";
+import useBookmarkGroupList from "./hooks/useBookmarkGroupList";
 
 const Main: FC = () => {
-  const [state, setState] = useImmer({
+  const [state, setState] = useImmer<IState>({
+    themeMode:
+      (document.documentElement.dataset.theme as TThemeMode) || "light",
     openBookmarkDrawer: false,
-    openAddBookmarkGroupModal: false,
-    darkMode: document.documentElement.dataset.theme === "dark",
-    bookmarkGroupList: [] as NSBookmark.TBookmarkGroupList,
   });
+  const {
+    bookmarkGroupList,
+    handleImportBookmark,
+    handleExportBookmark,
+    handleAddBookmarkGroup,
+    handleAddBookmarkItem,
+    handleEditBookmarkGroup,
+    handleEditBookmarkItem,
+    handleDeleteBookmarkGroup,
+    handleDeleteBookmarkItem,
+    handleMoveUpBookmarkGroup,
+    handleMoveUpBookmarkItem,
+    handleMoveDownBookmarkGroup,
+    handleMoveDownBookmarkItem,
+  } = useBookmarkGroupList();
+
   const handleSwitchThemeMode = () => {
     setState((draft) => {
-      const darkMode = !draft.darkMode;
-      draft.darkMode = darkMode;
-      document.documentElement.dataset.theme = darkMode ? "dark" : "light";
+      const themeMode = draft.themeMode === "light" ? "dark" : "light";
+      document.documentElement.dataset.theme = themeMode;
+      draft.themeMode = themeMode;
     });
   };
   const handleSwitchBookmarkDrawer = () => {
@@ -33,6 +48,30 @@ const Main: FC = () => {
       draft.openBookmarkDrawer = false;
     });
   }, [setState]);
+
+  useLayoutEffect(() => {
+    let themeMode: TThemeMode = "light";
+    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+      themeMode = "dark";
+    }
+    setState((draft) => {
+      draft.themeMode = themeMode;
+    });
+    document.documentElement.dataset.theme = themeMode;
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", (e) => {
+        let themeMode: TThemeMode = "light";
+        if (e.matches) {
+          themeMode = "dark";
+        }
+        setState((draft) => {
+          draft.themeMode = themeMode;
+        });
+        document.documentElement.dataset.theme = themeMode;
+      });
+  }, []);
+
   return (
     <div className={styles.container}>
       <div className={styles["header-bar"]}>
@@ -47,7 +86,7 @@ const Main: FC = () => {
               <FiBookmark /> 书签
             </Button>
             <Button onClick={handleSwitchThemeMode}>
-              {state.darkMode ? <FiMoon /> : <FiSun />}
+              {state.themeMode === "dark" ? <FiMoon /> : <FiSun />}
             </Button>
           </ButtonGroup>
         </div>
@@ -58,27 +97,21 @@ const Main: FC = () => {
       </div>
       <BookmarkDrawer
         open={state.openBookmarkDrawer}
-        bookmarkGroupList={state.bookmarkGroupList}
+        bookmarkGroupList={bookmarkGroupList}
         onClose={handleCloseBookmarkDrawer}
-        onAddBookmarkGroup={() =>
-          setState((draft) => {
-            draft.openAddBookmarkGroupModal = true;
-          })
-        }
-        onAddBookmarkItem={(bookmarkGroupId) => {}}
+        onImportBookmark={handleImportBookmark}
+        onExportBookmark={handleExportBookmark}
+        onAddBookmarkGroup={handleAddBookmarkGroup}
+        onAddBookmarkItem={handleAddBookmarkItem}
+        onEditBookmarkGroup={handleEditBookmarkGroup}
+        onEditBookmarkItem={handleEditBookmarkItem}
+        onDeleteBookmarkGroup={handleDeleteBookmarkGroup}
+        onDeleteBookmarkItem={handleDeleteBookmarkItem}
+        onMoveUpBookmarkGroup={handleMoveUpBookmarkGroup}
+        onMoveUpBookmarkItem={handleMoveUpBookmarkItem}
+        onMoveDownBookmarkGroup={handleMoveDownBookmarkGroup}
+        onMoveDownBookmarkItem={handleMoveDownBookmarkItem}
       />
-      <Modal
-        size="small"
-        title="新增书签分类"
-        open={state.openAddBookmarkGroupModal}
-        onClose={() =>
-          setState((draft) => {
-            draft.openAddBookmarkGroupModal = false;
-          })
-        }
-      >
-        <div>Content</div>
-      </Modal>
     </div>
   );
 };

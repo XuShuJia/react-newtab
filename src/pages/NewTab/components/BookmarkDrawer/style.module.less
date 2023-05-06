@@ -5,14 +5,22 @@
     --boxShadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     --closeButtonActiveBackground: #dddddd;
     --dividerBackground: #fafafa;
+    --itemHoverColor: #333333;
+    --itemActiveColor: #ffffff;
+    --itemHoverBackground: #dddddd;
+    --itemActiveBackground: #0191ff;
   }
   &[data-theme="dark"] {
     .bookmark-drawer {
       --color: #ffffff;
-      --background: #1e1e1e;
+      --background: #17191c;
       --boxShadow: none;
       --closeButtonActiveBackground: #1e1e1e;
       --dividerBackground: #2e2e2e;
+      --itemHoverColor: #ffffff;
+      --itemActiveColor: #ffffff;
+      --itemHoverBackground: #333333;
+      --itemActiveBackground: #0191ff;
     }
   }
 }
@@ -75,7 +83,6 @@
   width: 100%;
   height: 50px;
   padding: 0 15px;
-  padding-right: 10px;
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
@@ -92,6 +99,52 @@
   }
 }
 .drawer-content-box-list {
+  padding: 0 15px;
+}
+.item {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  height: 35px;
+  padding: 0 15px;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  border-radius: 5px;
+  color: var(--color);
+  overflow: hidden;
+  white-space: nowrap;
+  &:hover {
+    color: var(--itemHoverColor);
+    background: var(--itemHoverBackground);
+  }
+  &[data-active="true"] {
+    color: var(--itemActiveColor);
+    background: var(--itemActiveBackground);
+  }
+}
+.item-icon {
+  width: 14px;
+  height: 14px;
+  margin-right: 10px;
+  & > img {
+    width: 14px;
+    height: 14px;
+    object-fit: cover;
+  }
+}
+.item-title {
+  font-size: 14px;
+}
+.item-arrow {
+  position: absolute;
+  top: 50%;
+  right: 15px;
+  margin-top: -8px;
+  width: 16px;
+  height: 16px;
+  font-size: 16px;
 }
 
 .content-divider {

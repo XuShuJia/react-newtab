@@ -14,3 +14,10 @@ export namespace NSBookmark {
   }
   export type TBookmarkGroupList = IBookmarkGroup[];
 }
+
+export type TThemeMode = "light" | "dark";
+
+export interface IState {
+  themeMode: TThemeMode;
+  openBookmarkDrawer: boolean;
+}

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, {
   FC,
   PropsWithChildren,
@@ -7,11 +9,12 @@ import React, {
   useRef,
 } from "react";
 import { createPortal } from "react-dom";
+import { createRoot } from "react-dom/client";
 import { useImmer } from "use-immer";
 import { FiX } from "react-icons/fi";
 import Button, { ButtonGroup } from "~/components/Button";
 import styles from "./style.module.less";
-import { IModalProps, IModalSizeMap } from "./types";
+import { IModalProps, IModalSizeMap, ICommandModeContentProps } from "./types";
 
 const ModalSizeMap: IModalSizeMap = {
   default: [420, 600],
@@ -31,18 +34,22 @@ const Modal: FC<IModalProps & PropsWithChildren> = memo((props) => {
     top: 0,
     left: 0,
   });
+  const modalCloseBySelfRef = useRef(false);
   const handleClickOk = () => {
+    props.onOk && props.onOk();
     if (props.okButtonClose !== false) {
-      props.onClose();
+      props.onClose && props.onClose();
     }
   };
   const handleClickCancel = () => {
+    props.onCancel && props.onCancel();
     if (props.cancelButtonClose !== false) {
-      props.onClose();
+      props.onClose && props.onClose();
     }
   };
 
   useLayoutEffect(() => {
+    if (modalCloseBySelfRef.current) return;
     if (props.open && !state.render && !state.show) {
       setState((draft) => {
         draft.render = true;
@@ -121,6 +128,28 @@ const Modal: FC<IModalProps & PropsWithChildren> = memo((props) => {
     };
   }, [props.size, state.render]);
 
+  // CCM Mode
+  useEffect(() => {
+    if (props.onReady) {
+      props.onReady({
+        doClose() {
+          modalCloseBySelfRef.current = true;
+          setState((draft) => {
+            draft.show = false;
+          });
+          setTimeout(() => {
+            setState((draft) => {
+              draft.render = false;
+            });
+            props.onClosed && props.onClosed();
+            modalCloseBySelfRef.current = false;
+          }, 300);
+        },
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   if (!state.render) return null;
 
   return createPortal(
@@ -168,4 +197,45 @@ const Modal: FC<IModalProps & PropsWithChildren> = memo((props) => {
   );
 });
 
+const CreateCommandModal = <CP = object,>(
+  Content: FC<ICommandModeContentProps<CP>>
+) => {
+  let doCloseModal = () => {};
+  const open = (contentProps?: CP, modalProps?: IModalProps) => {
+    const mountNode = document.body.appendChild(document.createElement("div"));
+    const root = createRoot(mountNode);
+    root.render(
+      <React.StrictMode>
+        <Content
+          Modal={Modal}
+          modalProps={{
+            ...modalProps,
+            open: true,
+            onReady(instance) {
+              doCloseModal = instance.doClose;
+            },
+            onClose() {
+              doCloseModal();
+            },
+            onClosed() {
+              root.unmount();
+              document.body.removeChild(mountNode);
+            },
+          }}
+          contentProps={(contentProps || {}) as unknown as any}
+        />
+      </React.StrictMode>
+    );
+  };
+  const close = () => {
+    doCloseModal();
+  };
+  return {
+    open,
+    close,
+  };
+};
+
+export { ModalSizeMap, CreateCommandModal };
+// export { default as ConfirmModal } from "./ConfirmModal";
 export default Modal;
