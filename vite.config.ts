@@ -4,6 +4,7 @@ import path from "path";
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: "https://xushujia.github.io/newtab/",
   plugins: [react()],
   resolve: {
     alias: {
