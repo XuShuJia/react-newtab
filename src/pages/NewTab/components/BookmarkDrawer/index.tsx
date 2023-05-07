@@ -1,6 +1,6 @@
 import { FC, PropsWithChildren, memo, useEffect, useRef } from "react";
 import { useImmer } from "use-immer";
-import { FiPlus, FiFolder, FiChevronRight } from "react-icons/fi";
+import { FiPlus, FiFolder, FiChevronRight, FiBookmark } from "react-icons/fi";
 import styles from "./style.module.less";
 import {
   IBookmarkDrawerProps,
@@ -40,6 +40,9 @@ const DrawerContentBox: FC<IDrawerContentBoxProps & PropsWithChildren> = (
 };
 
 const BookmarkListItem: FC<IBookmarkListItemProps> = (props) => {
+  const [state, setState] = useImmer({
+    iconError: false,
+  });
   return (
     <div
       className={[styles.item].join(" ")}
@@ -48,7 +51,22 @@ const BookmarkListItem: FC<IBookmarkListItemProps> = (props) => {
       onContextMenu={props.onContextMenu}
     >
       <div className={styles["item-icon"]}>
-        {typeof props.icon === "string" ? <img src={props.icon} /> : props.icon}
+        {typeof props.icon === "string" ? (
+          !state.iconError ? (
+            <img
+              src={props.icon}
+              onError={() =>
+                setState((draft) => {
+                  draft.iconError = true;
+                })
+              }
+            />
+          ) : (
+            <FiBookmark />
+          )
+        ) : (
+          props.icon
+        )}
       </div>
       <div className={styles["item-title"]}>{props.title}</div>
       {props.arrow ? (

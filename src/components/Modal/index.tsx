@@ -158,23 +158,26 @@ const Modal: FC<IModalProps & PropsWithChildren> = memo((props) => {
         <div data-show={state.show} className={styles["modal-mask"]}></div>
       ) : null}
       <div ref={modalRef} className={styles.modal} data-show={state.show}>
-        <div className={styles["modal-header"]}>
-          <div
-            className={[styles["modal-title"], "theme-transition"].join(" ")}
-          >
-            {props.title}
+        {props.renderHeader !== false ? (
+          <div className={styles["modal-header"]}>
+            <div
+              className={[styles["modal-title"], "theme-transition"].join(" ")}
+            >
+              {props.title}
+            </div>
+            <div
+              className={[styles["modal-close"], "theme-transition"].join(" ")}
+              onClick={props.onClose}
+            >
+              <FiX />
+            </div>
           </div>
-          <div
-            className={[styles["modal-close"], "theme-transition"].join(" ")}
-            onClick={props.onClose}
-          >
-            <FiX />
-          </div>
-        </div>
+        ) : null}
         <div className={styles["modal-content"]}>{props.children}</div>
-        {(props.customButtons && props.customButtons.length > 0) ||
-        props.okButton !== false ||
-        props.cancelButton !== false ? (
+        {((props.customButtons && props.customButtons.length > 0) ||
+          props.okButton !== false ||
+          props.cancelButton !== false) &&
+        props.renderFooter !== false ? (
           <div className={styles["modal-footer"]}>
             <ButtonGroup>
               {props.customButtons}

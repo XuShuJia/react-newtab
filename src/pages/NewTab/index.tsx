@@ -1,6 +1,8 @@
-import { FC, useCallback, useLayoutEffect } from "react";
+import { FC, useCallback } from "react";
 import { useImmer } from "use-immer";
+import { useSelector, useDispatch } from "react-redux";
 import { FiBookmark, FiMoon, FiSun } from "react-icons/fi";
+import { TStore, switchThemeMode } from "~/store";
 import styles from "./style.module.less";
 import { IState, TThemeMode } from "./types";
 import Button, { ButtonGroup } from "~/components/Button";
@@ -10,6 +12,8 @@ import BookmarkDrawer from "./components/BookmarkDrawer";
 import useBookmarkGroupList from "./hooks/useBookmarkGroupList";
 
 const Main: FC = () => {
+  const themeMode = useSelector((state: TStore) => state.themeMode);
+  const dispatch = useDispatch();
   const [state, setState] = useImmer<IState>({
     themeMode:
       (document.documentElement.dataset.theme as TThemeMode) || "light",
@@ -32,11 +36,7 @@ const Main: FC = () => {
   } = useBookmarkGroupList();
 
   const handleSwitchThemeMode = () => {
-    setState((draft) => {
-      const themeMode = draft.themeMode === "light" ? "dark" : "light";
-      document.documentElement.dataset.theme = themeMode;
-      draft.themeMode = themeMode;
-    });
+    dispatch(switchThemeMode());
   };
   const handleSwitchBookmarkDrawer = () => {
     setState((draft) => {
@@ -48,29 +48,6 @@ const Main: FC = () => {
       draft.openBookmarkDrawer = false;
     });
   }, [setState]);
-
-  useLayoutEffect(() => {
-    let themeMode: TThemeMode = "light";
-    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-      themeMode = "dark";
-    }
-    setState((draft) => {
-      draft.themeMode = themeMode;
-    });
-    document.documentElement.dataset.theme = themeMode;
-    window
-      .matchMedia("(prefers-color-scheme: dark)")
-      .addEventListener("change", (e) => {
-        let themeMode: TThemeMode = "light";
-        if (e.matches) {
-          themeMode = "dark";
-        }
-        setState((draft) => {
-          draft.themeMode = themeMode;
-        });
-        document.documentElement.dataset.theme = themeMode;
-      });
-  }, []);
 
   return (
     <div className={styles.container}>
@@ -86,7 +63,7 @@ const Main: FC = () => {
               <FiBookmark /> 书签
             </Button>
             <Button onClick={handleSwitchThemeMode}>
-              {state.themeMode === "dark" ? <FiMoon /> : <FiSun />}
+              {themeMode.mode === "dark" ? <FiMoon /> : <FiSun />}
             </Button>
           </ButtonGroup>
         </div>

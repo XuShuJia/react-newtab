@@ -24,6 +24,8 @@ export interface IModalProps {
   cancelButtonText?: string;
   cancelButtonClose?: boolean;
   customButtons?: ReactElement[];
+  renderHeader?: boolean;
+  renderFooter?: boolean;
   onOk?: () => void;
   onCancel?: () => void;
   onReady?: (instance: IModalInstance) => void;
